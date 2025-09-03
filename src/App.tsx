@@ -1,419 +1,360 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
+"use client"
+
+import React, { useState, useRef, useEffect } from "react"
+import { motion, useTransform, useInView, useSpring } from "framer-motion"
 import { 
-  DollarSign,
-  Shield,
-  TrendingUp,
-  Building,
-  CheckCircle,
-  Star,
-  ArrowRight,
-  Clock,
-  Users,
-  BookOpen,
-  Award,
+  BookOpen, 
+  Users, 
+  Award, 
+  TrendingUp, 
+  CheckCircle, 
+  Star, 
+  ArrowRight, 
+  Coffee, 
+  Brain, 
+  Target, 
+  Zap,
   ChevronDown,
-  ChevronUp,
   Mail,
   Phone,
-  Menu,
-  X,
-  Target,
-  Zap,
-  BarChart,
-  FileText,
-  Briefcase
+  MapPin,
+  DollarSign,
+  Shield,
+  Headphones
 } from "lucide-react"
+import confetti from "canvas-confetti"
+import NumberFlow from "@number-flow/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 
-// Navigation Component
-const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+// Utility function
+function cn(...classes: (string | undefined | null | false)[]): string {
+  return classes.filter(Boolean).join(' ')
+}
 
-  return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold text-navy">BBS</span>
-            <span className="ml-2 text-sm text-gray-600 hidden sm:inline">Blue Collar Business School</span>
-          </div>
-          
-          <div className="hidden md:flex space-x-8">
-            <a href="#curriculum" className="text-gray-700 hover:text-navy transition">Curriculum</a>
-            <a href="#pricing" className="text-gray-700 hover:text-navy transition">Pricing</a>
-            <a href="#success-stories" className="text-gray-700 hover:text-navy transition">Success Stories</a>
-            <a href="#resources" className="text-gray-700 hover:text-navy transition">Resources</a>
-            <Button className="bg-safety hover:bg-safety-dark text-white">Start Free Trial</Button>
-          </div>
+// Types
+interface PricingPlan {
+  name: string
+  price: string
+  yearlyPrice: string
+  period: string
+  features: string[]
+  description: string
+  buttonText: string
+  href: string
+  isPopular: boolean
+}
 
-          <button 
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-      </div>
+interface TestimonialData {
+  name: string
+  role: string
+  company: string
+  content: string
+  avatar: string
+  rating: number
+}
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
-            <a href="#curriculum" className="block px-3 py-2 text-gray-700 hover:text-navy">Curriculum</a>
-            <a href="#pricing" className="block px-3 py-2 text-gray-700 hover:text-navy">Pricing</a>
-            <a href="#success-stories" className="block px-3 py-2 text-gray-700 hover:text-navy">Success Stories</a>
-            <a href="#resources" className="block px-3 py-2 text-gray-700 hover:text-navy">Resources</a>
-            <Button className="w-full bg-safety hover:bg-safety-dark text-white mt-2">Start Free Trial</Button>
-          </div>
-        </div>
-      )}
-    </nav>
-  )
+interface FAQItem {
+  question: string
+  answer: string
 }
 
 // Hero Section
 const HeroSection = () => {
+  const [squares, setSquares] = useState<React.ReactElement[]>([])
+  const timeoutRef = useRef<number | null>(null)
+
+  const shuffle = (array: any[]) => {
+    let currentIndex = array.length, randomIndex
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex--
+      ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    }
+    return array
+  }
+
+  const squareData = [
+    { id: 1, src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" },
+    { id: 2, src: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop" },
+    { id: 3, src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop" },
+    { id: 4, src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop" },
+    { id: 5, src: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop" },
+    { id: 6, src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop" },
+    { id: 7, src: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop" },
+    { id: 8, src: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop" },
+    { id: 9, src: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=400&h=400&fit=crop" },
+    { id: 10, src: "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&h=400&fit=crop" },
+    { id: 11, src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop" },
+    { id: 12, src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop" },
+    { id: 13, src: "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&h=400&fit=crop" },
+    { id: 14, src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop" },
+    { id: 15, src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=400&fit=crop" },
+    { id: 16, src: "https://images.unsplash.com/photo-1541101767792-f9b2b1c4f127?w=400&h=400&fit=crop" }
+  ]
+
+  const generateSquares = () => {
+    return shuffle([...squareData]).map((sq) => (
+      <motion.div
+        key={sq.id}
+        layout
+        transition={{ duration: 1.5, type: "spring" }}
+        className="w-full h-full rounded-lg"
+        style={{
+          backgroundImage: `url(${sq.src})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      />
+    ))
+  }
+
+  const shuffleSquares = () => {
+    setSquares(generateSquares())
+    timeoutRef.current = setTimeout(shuffleSquares, 3000) as unknown as number
+  }
+
+  useEffect(() => {
+    setSquares(generateSquares())
+    shuffleSquares()
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
   return (
-    <section className="bg-gradient-to-b from-gray-50 to-white py-20 px-4">
-      <div className="max-w-7xl mx-auto text-center">
-        <motion.h1 
+    <section className="w-full px-8 py-20 grid grid-cols-1 md:grid-cols-2 items-center gap-12 max-w-7xl mx-auto bg-gradient-to-br from-amber-50 to-orange-50">
+      <div className="space-y-6">
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl md:text-6xl font-bold text-navy mb-6"
+          transition={{ duration: 0.6 }}
         >
-          Stop Working IN Your Business.<br />
-          Start Working ON It.
-        </motion.h1>
+          <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200">
+            <Coffee className="w-4 h-4 mr-2" />
+            Transform Your Business
+          </Badge>
+          <h1 className="text-5xl md:text-6xl font-bold text-amber-900 leading-tight">
+            Stop Working IN Your
+            <span className="text-orange-600"> Business </span><br />
+            Start Working ON It
+          </h1>
+          <p className="text-lg text-amber-800 mt-6 leading-relaxed">
+            The 12-Week Email Course That Transforms Contractors Into CEOs. 
+            Save $7,065+ annually in taxes, protect your assets, and charge 18% higher rates.
+          </p>
+        </motion.div>
         
-        <motion.p 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-col sm:flex-row gap-4"
         >
-          The 12-Week Email Course That Transforms Contractors Into CEOs
-        </motion.p>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8"
-        >
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <DollarSign className="w-8 h-8 text-success mx-auto mb-2" />
-            <p className="font-semibold text-navy">Tax Savings</p>
-            <p className="text-sm text-gray-600">$7,065+ annually</p>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <Shield className="w-8 h-8 text-steel mx-auto mb-2" />
-            <p className="font-semibold text-navy">Asset Protection</p>
-            <p className="text-sm text-gray-600">$847,000 avg</p>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <TrendingUp className="w-8 h-8 text-safety mx-auto mb-2" />
-            <p className="font-semibold text-navy">Premium Pricing</p>
-            <p className="text-sm text-gray-600">18% higher rates</p>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow-md">
-            <Building className="w-8 h-8 text-warning mx-auto mb-2" />
-            <p className="font-semibold text-navy">Gov Contracts</p>
-            <p className="text-sm text-gray-600">$400B market</p>
-          </div>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="space-y-4"
-        >
-          <Button size="lg" className="bg-safety hover:bg-safety-dark text-white text-lg px-8 py-6">
+          <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 text-lg">
             Start Free 7-Day Trial
-            <ArrowRight className="ml-2" />
+            <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
-          
-          <div className="flex items-center justify-center space-x-6 text-sm text-gray-600">
-            <span className="flex items-center"><Users className="w-4 h-4 mr-1" /> 500+ Contractors Enrolled</span>
-            <span className="flex items-center"><DollarSign className="w-4 h-4 mr-1" /> $3.5M Saved in Taxes</span>
-            <span className="flex items-center"><Star className="w-4 h-4 mr-1 text-yellow-500" /> 4.9 Star Rating</span>
+          <Button variant="outline" size="lg" className="border-amber-300 text-amber-800 hover:bg-amber-100 px-8 py-4 text-lg">
+            Get Free LLC Guide
+          </Button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="flex items-center gap-6 pt-4"
+        >
+          <div className="flex items-center">
+            <div className="flex -space-x-2">
+              {[1,2,3,4].map((i) => (
+                <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-amber-500 border-2 border-white" />
+              ))}
+            </div>
+            <span className="ml-3 text-amber-800 font-medium">500+ contractors enrolled</span>
           </div>
         </motion.div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+        className="grid grid-cols-4 grid-rows-4 h-[450px] gap-2 rounded-2xl overflow-hidden shadow-2xl"
+      >
+        {squares}
+      </motion.div>
     </section>
   )
 }
 
-// Problem/Solution Section
-const ProblemSolutionSection = () => {
-  return (
-    <section className="py-20 px-4 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-12">
-          <div>
-            <h2 className="text-3xl font-bold text-navy mb-6">The Harsh Reality</h2>
-            <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg mb-6">
-              <p className="text-2xl font-bold text-red-900">73%</p>
-              <p className="text-lg text-red-800">of contractors fail within 5 years</p>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <X className="w-5 h-5 text-red-500 mt-1 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-900">Poor Business Structure</p>
-                  <p className="text-sm text-gray-600">Operating as sole proprietor, missing tax advantages</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <X className="w-5 h-5 text-red-500 mt-1 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-900">No Systems</p>
-                  <p className="text-sm text-gray-600">Working 60+ hours, everything depends on you</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <X className="w-5 h-5 text-red-500 mt-1 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-900">Bad Financial Management</p>
-                  <p className="text-sm text-gray-600">Mixing personal and business, no profit margins</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-3xl font-bold text-navy mb-6">The Solution</h2>
-            <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg mb-6">
-              <p className="text-2xl font-bold text-green-900">12 Weeks</p>
-              <p className="text-lg text-green-800">to transform your contracting business</p>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-1 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-900">Step-by-Step Education</p>
-                  <p className="text-sm text-gray-600">60+ lessons designed for busy contractors</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-1 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-900">Practical Templates</p>
-                  <p className="text-sm text-gray-600">50+ contracts, SOPs, and financial tools</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-1 mr-3 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold text-gray-900">Real Results</p>
-                  <p className="text-sm text-gray-600">Join 500+ contractors building wealth</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Course Overview Section
-const CourseOverviewSection = () => {
-  const phases = [
+// Features Section
+const FeaturesSection = () => {
+  const features = [
     {
-      title: "Phase 1: Foundation",
-      weeks: "Weeks 1-4",
-      color: "bg-navy",
-      modules: [
-        { week: 1, title: "Business Structure & Legal", icon: <FileText className="w-5 h-5" /> },
-        { week: 2, title: "Contracts & Protection", icon: <Shield className="w-5 h-5" /> },
-        { week: 3, title: "Financial Management", icon: <DollarSign className="w-5 h-5" /> },
-        { week: 4, title: "Operations & SOPs", icon: <Briefcase className="w-5 h-5" /> }
-      ]
+      icon: <Brain className="w-8 h-8" />,
+      title: "12-Week Email Course",
+      description: "Daily 15-minute lessons delivered at 6 AM. Build business knowledge while drinking your morning coffee."
     },
     {
-      title: "Phase 2: Growth",
-      weeks: "Weeks 5-8",
-      color: "bg-steel",
-      modules: [
-        { week: 5, title: "Marketing & Branding", icon: <Target className="w-5 h-5" /> },
-        { week: 6, title: "Lead Generation & Sales", icon: <TrendingUp className="w-5 h-5" /> },
-        { week: 7, title: "Advanced Financials", icon: <BarChart className="w-5 h-5" /> },
-        { week: 8, title: "Team Building", icon: <Users className="w-5 h-5" /> }
-      ]
+      icon: <Target className="w-8 h-8" />,
+      title: "Entity Structure Mastery",
+      description: "Learn LLC, S-Corp, and holding company strategies that save established businesses $7,065+ annually."
     },
     {
-      title: "Phase 3: Scaling",
-      weeks: "Weeks 9-12",
-      color: "bg-safety",
-      modules: [
-        { week: 9, title: "Growth Strategies", icon: <Zap className="w-5 h-5" /> },
-        { week: 10, title: "Trade-Specific Tactics", icon: <Building className="w-5 h-5" /> },
-        { week: 11, title: "Leadership Development", icon: <Award className="w-5 h-5" /> },
-        { week: 12, title: "Exit Planning", icon: <Target className="w-5 h-5" /> }
-      ]
+      icon: <TrendingUp className="w-8 h-8" />,
+      title: "Government Contracts",
+      description: "Access the $400B government contract market with our step-by-step certification and bidding guides."
+    },
+    {
+      icon: <Award className="w-8 h-8" />,
+      title: "Premium Pricing Power",
+      description: "Position yourself to charge 18% higher rates through proven branding and value communication strategies."
+    },
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "50+ Templates & Tools",
+      description: "Contracts, SOPs, financial spreadsheets, and marketing materials ready to use in your business."
+    },
+    {
+      icon: <BookOpen className="w-8 h-8" />,
+      title: "State-Specific Guides",
+      description: "All 50 states covered with licensing requirements, insurance minimums, and tax obligations."
     }
   ]
 
   return (
-    <section id="curriculum" className="py-20 px-4 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-navy mb-4">Your 12-Week Transformation</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Daily 15-minute lessons delivered at 6 AM, designed to fit your busy schedule
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge className="mb-4 bg-orange-100 text-orange-800 border-orange-200">
+            <Zap className="w-4 h-4 mr-2" />
+            Why Choose Us
+          </Badge>
+          <h2 className="text-4xl font-bold text-amber-900 mb-6">
+            Everything You Need to Grow Your Business
+          </h2>
+          <p className="text-xl text-amber-700 max-w-3xl mx-auto">
+            From basic business principles to advanced growth strategies, our platform provides the knowledge and tools you need.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {phases.map((phase, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-lg overflow-hidden"
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="p-6 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 hover:shadow-lg transition-all duration-300"
             >
-              <div className={`${phase.color} text-white p-6`}>
-                <h3 className="text-2xl font-bold mb-2">{phase.title}</h3>
-                <p className="text-sm opacity-90">{phase.weeks}</p>
+              <div className="text-orange-600 mb-4">
+                {feature.icon}
               </div>
-              <div className="p-6 space-y-4">
-                {phase.modules.map((module, mIndex) => (
-                  <div key={mIndex} className="flex items-center space-x-3">
-                    <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
-                      {module.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500">Week {module.week}</p>
-                      <p className="font-semibold text-gray-900">{module.title}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <h3 className="text-xl font-semibold text-amber-900 mb-3">
+                {feature.title}
+              </h3>
+              <p className="text-amber-700">
+                {feature.description}
+              </p>
             </motion.div>
           ))}
         </div>
-
-        <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
-          <h3 className="text-2xl font-bold text-navy mb-6">What's Included</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <BookOpen className="w-12 h-12 text-steel mx-auto mb-3" />
-              <p className="font-bold text-2xl text-navy">60+</p>
-              <p className="text-gray-600">Lessons</p>
-            </div>
-            <div className="text-center">
-              <FileText className="w-12 h-12 text-steel mx-auto mb-3" />
-              <p className="font-bold text-2xl text-navy">50+</p>
-              <p className="text-gray-600">Templates</p>
-            </div>
-            <div className="text-center">
-              <BarChart className="w-12 h-12 text-steel mx-auto mb-3" />
-              <p className="font-bold text-2xl text-navy">25+</p>
-              <p className="text-gray-600">Calculators</p>
-            </div>
-            <div className="text-center">
-              <Zap className="w-12 h-12 text-steel mx-auto mb-3" />
-              <p className="font-bold text-2xl text-navy">100+</p>
-              <p className="text-gray-600">AI Prompts</p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
 }
 
-// Success Stories Section
-const SuccessStoriesSection = () => {
-  const stories = [
+// Testimonials Section
+const TestimonialsSection = () => {
+  const testimonials: TestimonialData[] = [
     {
       name: "Mike Rodriguez",
-      trade: "HVAC Contractor",
-      location: "Texas",
-      image: "/api/placeholder/150/150",
-      revenue: { before: "$250K", after: "$850K" },
-      profit: { before: "8%", after: "22%" },
-      quote: "The LLC structure alone saved me $18,000 in taxes last year. The systems we implemented freed up 20 hours a week.",
-      highlights: ["3.4x revenue growth", "Hired 5 employees", "Got first government contract"]
+      role: "HVAC Contractor",
+      company: "Rodriguez HVAC Services",
+      content: "The LLC structure alone saved me $18,000 in taxes last year. The systems we implemented freed up 20 hours a week.",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
+      rating: 5
     },
     {
       name: "Sarah Chen",
-      trade: "Electrical Contractor",
-      location: "California",
-      image: "/api/placeholder/150/150",
-      revenue: { before: "$180K", after: "$520K" },
-      profit: { before: "5%", after: "18%" },
-      quote: "I went from working 70 hours a week to 40, while tripling my income. The course paid for itself in the first month.",
-      highlights: ["Won $200K contract", "Automated billing", "4-day work week"]
+      role: "Electrical Contractor",
+      company: "Chen Electric Solutions",
+      content: "I went from working 70 hours a week to 40, while tripling my income. The course paid for itself in the first month.",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop",
+      rating: 5
     },
     {
       name: "Tom Wilson",
-      trade: "General Contractor",
-      location: "Florida",
-      image: "/api/placeholder/150/150",
-      revenue: { before: "$400K", after: "$1.2M" },
-      profit: { before: "10%", after: "25%" },
-      quote: "Finally built a business that runs without me. Just closed on my dream vacation home thanks to the profit increase.",
-      highlights: ["3x revenue", "15 employees", "Sold for 4x revenue"]
+      role: "General Contractor",
+      company: "Wilson Construction Group",
+      content: "Finally built a business that runs without me. Just closed on my dream vacation home thanks to the profit increase.",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
+      rating: 5
     }
   ]
 
   return (
-    <section id="success-stories" className="py-20 px-4 bg-white">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-navy mb-4">Real Contractors. Real Results.</h2>
-          <p className="text-xl text-gray-600">Join 500+ contractors who transformed their businesses</p>
-        </div>
+    <section className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
+      <div className="max-w-7xl mx-auto px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200">
+            <Users className="w-4 h-4 mr-2" />
+            Success Stories
+          </Badge>
+          <h2 className="text-4xl font-bold text-amber-900 mb-6">
+            Real Results from Real Contractors
+          </h2>
+          <p className="text-xl text-amber-700 max-w-3xl mx-auto">
+            See how our education platform has helped contractors like you build thriving businesses.
+          </p>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {stories.map((story, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-gray-50 rounded-xl p-6"
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white p-6 rounded-xl shadow-lg border border-amber-200"
             >
               <div className="flex items-center mb-4">
-                <div className="w-16 h-16 bg-gray-300 rounded-full mr-4"></div>
-                <div>
-                  <p className="font-bold text-navy">{story.name}</p>
-                  <p className="text-sm text-gray-600">{story.trade}</p>
-                  <p className="text-xs text-gray-500">{story.location}</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-white rounded-lg p-3">
-                  <p className="text-xs text-gray-500 mb-1">Revenue</p>
-                  <p className="text-sm line-through text-gray-400">{story.revenue.before}</p>
-                  <p className="text-lg font-bold text-green-600">{story.revenue.after}</p>
-                </div>
-                <div className="bg-white rounded-lg p-3">
-                  <p className="text-xs text-gray-500 mb-1">Profit Margin</p>
-                  <p className="text-sm line-through text-gray-400">{story.profit.before}</p>
-                  <p className="text-lg font-bold text-green-600">{story.profit.after}</p>
-                </div>
-              </div>
-
-              <p className="text-gray-700 italic mb-4">"{story.quote}"</p>
-
-              <div className="space-y-2">
-                {story.highlights.map((highlight, hIndex) => (
-                  <div key={hIndex} className="flex items-center text-sm">
-                    <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                    <span className="text-gray-700">{highlight}</span>
-                  </div>
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                 ))}
+              </div>
+              <p className="text-amber-800 mb-6 italic">
+                "{testimonial.content}"
+              </p>
+              <div className="flex items-center">
+                <img
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                  className="w-12 h-12 rounded-full mr-4"
+                />
+                <div>
+                  <h4 className="font-semibold text-amber-900">{testimonial.name}</h4>
+                  <p className="text-amber-700 text-sm">{testimonial.role}</p>
+                  <p className="text-amber-600 text-sm">{testimonial.company}</p>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -425,14 +366,38 @@ const SuccessStoriesSection = () => {
 
 // Pricing Section
 const PricingSection = () => {
-  const [isAnnual, setIsAnnual] = useState(false)
+  const [isMonthly, setIsMonthly] = useState(true)
+  const switchRef = useRef<HTMLButtonElement>(null)
 
-  const plans = [
+  const handleToggle = (checked: boolean) => {
+    setIsMonthly(!checked)
+    if (checked && switchRef.current) {
+      const rect = switchRef.current.getBoundingClientRect()
+      const x = rect.left + rect.width / 2
+      const y = rect.top + rect.height / 2
+
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: {
+          x: x / window.innerWidth,
+          y: y / window.innerHeight,
+        },
+        colors: ["#f59e0b", "#ea580c", "#dc2626"],
+        ticks: 200,
+        gravity: 1.2,
+        decay: 0.94,
+        startVelocity: 30,
+      })
+    }
+  }
+
+  const plans: PricingPlan[] = [
     {
-      name: "Starter",
-      monthlyPrice: 97,
-      annualPrice: 77,
-      description: "Perfect for new contractors",
+      name: "STARTER",
+      price: "97",
+      yearlyPrice: "77",
+      period: "per month",
       features: [
         "Full 12-week email course",
         "Basic templates & contracts",
@@ -440,14 +405,16 @@ const PricingSection = () => {
         "State licensing guide",
         "Tax savings calculator"
       ],
-      cta: "Start Free Trial",
-      isPopular: false
+      description: "Perfect for new contractors",
+      buttonText: "Start Free Trial",
+      href: "/sign-up",
+      isPopular: false,
     },
     {
-      name: "Professional",
-      monthlyPrice: 197,
-      annualPrice: 157,
-      description: "For growing businesses",
+      name: "PROFESSIONAL",
+      price: "197",
+      yearlyPrice: "157",
+      period: "per month",
       features: [
         "Everything in Starter",
         "All 50+ templates & tools",
@@ -457,14 +424,16 @@ const PricingSection = () => {
         "Advanced financial tools",
         "Marketing templates"
       ],
-      cta: "Start Free Trial",
-      isPopular: true
+      description: "For growing businesses",
+      buttonText: "Start Free Trial",
+      href: "/sign-up",
+      isPopular: true,
     },
     {
-      name: "Enterprise",
-      monthlyPrice: 497,
-      annualPrice: 397,
-      description: "For scaling companies",
+      name: "ENTERPRISE",
+      price: "497",
+      yearlyPrice: "397",
+      period: "per month",
       features: [
         "Everything in Professional",
         "1-on-1 monthly coaching",
@@ -474,97 +443,117 @@ const PricingSection = () => {
         "Exit planning guidance",
         "M&A preparation tools"
       ],
-      cta: "Start Free Trial",
-      isPopular: false
-    }
+      description: "For scaling companies",
+      buttonText: "Start Free Trial",
+      href: "/contact",
+      isPopular: false,
+    },
   ]
 
   return (
-    <section id="pricing" className="py-20 px-4 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-navy mb-4">Investment in Your Future</h2>
-          <p className="text-xl text-gray-600 mb-8">Choose the plan that fits your business goals</p>
-          
-          <div className="inline-flex items-center space-x-3 bg-white rounded-lg p-1 shadow-md">
-            <button
-              onClick={() => setIsAnnual(false)}
-              className={`px-4 py-2 rounded-md transition ${!isAnnual ? 'bg-navy text-white' : 'text-gray-600'}`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setIsAnnual(true)}
-              className={`px-4 py-2 rounded-md transition ${isAnnual ? 'bg-navy text-white' : 'text-gray-600'}`}
-            >
-              Annual
-              <Badge className="ml-2 bg-green-100 text-green-800">Save 20%</Badge>
-            </button>
-          </div>
-        </div>
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge className="mb-4 bg-orange-100 text-orange-800 border-orange-200">
+            <DollarSign className="w-4 h-4 mr-2" />
+            Simple Pricing
+          </Badge>
+          <h2 className="text-4xl font-bold text-amber-900 mb-6">
+            Invest in Your Business Education
+          </h2>
+          <p className="text-xl text-amber-700 max-w-3xl mx-auto mb-8">
+            Choose the plan that fits your business size and growth goals. All plans include our satisfaction guarantee.
+          </p>
 
-        <div className="grid md:grid-cols-3 gap-8">
+          <div className="flex justify-center mb-10">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <Label>
+                <Switch
+                  ref={switchRef as any}
+                  checked={!isMonthly}
+                  onCheckedChange={handleToggle}
+                  className="relative"
+                />
+              </Label>
+            </label>
+            <span className="ml-2 font-semibold text-amber-800">
+              Annual billing <span className="text-orange-600">(Save 20%)</span>
+            </span>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative bg-white rounded-xl shadow-lg overflow-hidden ${
-                plan.isPopular ? 'ring-2 ring-safety' : ''
-              }`}
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className={cn(
+                "rounded-2xl border-2 p-8 bg-white text-center relative",
+                plan.isPopular ? "border-orange-500 shadow-xl scale-105" : "border-amber-200",
+                "flex flex-col h-full"
+              )}
             >
               {plan.isPopular && (
-                <div className="absolute top-0 right-0 bg-safety text-white px-3 py-1 text-sm rounded-bl-lg">
-                  Most Popular
+                <div className="absolute top-0 right-0 bg-orange-500 py-1 px-3 rounded-bl-xl rounded-tr-xl flex items-center">
+                  <Star className="text-white h-4 w-4 fill-current mr-1" />
+                  <span className="text-white font-semibold text-sm">Most Popular</span>
                 </div>
               )}
               
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-navy mb-2">{plan.name}</h3>
-                <p className="text-gray-600 mb-4">{plan.description}</p>
+              <div className="flex-1 flex flex-col">
+                <p className="text-lg font-semibold text-amber-800 mb-4">{plan.name}</p>
                 
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-navy">
-                    ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                  <span className="text-5xl font-bold text-amber-900">
+                    $
+                    <NumberFlow
+                      value={isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)}
+                      format={{
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }}
+                      transformTiming={{
+                        duration: 500,
+                        easing: "ease-out",
+                      }}
+                      willChange
+                    />
                   </span>
-                  <span className="text-gray-600">/month</span>
-                  {isAnnual && (
-                    <p className="text-sm text-green-600 mt-1">
-                      Save ${(plan.monthlyPrice - plan.annualPrice) * 12}/year
-                    </p>
-                  )}
+                  <span className="text-amber-700 ml-2">/ {plan.period}</span>
                 </div>
 
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, fIndex) => (
-                    <li key={fIndex} className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{feature}</span>
+                <p className="text-amber-700 text-sm mb-6">{plan.description}</p>
+
+                <ul className="space-y-3 mb-8 flex-1">
+                  {plan.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-orange-500 mr-3 mt-0.5 flex-shrink-0" />
+                      <span className="text-amber-800 text-left">{feature}</span>
                     </li>
                   ))}
                 </ul>
 
-                <Button className={`w-full ${
-                  plan.isPopular 
-                    ? 'bg-safety hover:bg-safety-dark' 
-                    : 'bg-navy hover:bg-navy-dark'
-                } text-white`}>
-                  {plan.cta}
+                <Button
+                  className={cn(
+                    "w-full py-3 font-semibold",
+                    plan.isPopular
+                      ? "bg-orange-600 hover:bg-orange-700 text-white"
+                      : "bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300"
+                  )}
+                >
+                  {plan.buttonText}
                 </Button>
               </div>
             </motion.div>
           ))}
-        </div>
-
-        <div className="mt-12 bg-green-50 border border-green-200 rounded-xl p-6">
-          <div className="flex items-center justify-center space-x-2 mb-2">
-            <Shield className="w-6 h-6 text-green-600" />
-            <h3 className="text-xl font-bold text-green-900">30-Day Money Back Guarantee</h3>
-          </div>
-          <p className="text-center text-green-800">
-            Show measurable results or get a full refund. Keep all downloaded materials.
-          </p>
         </div>
       </div>
     </section>
@@ -575,7 +564,7 @@ const PricingSection = () => {
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
-  const faqs = [
+  const faqs: FAQItem[] = [
     {
       question: "How much time do I need to commit daily?",
       answer: "Just 15 minutes a day. Lessons are delivered at 6 AM and designed to be completed during your morning coffee. Most contractors finish each lesson in 10-15 minutes."
@@ -589,281 +578,355 @@ const FAQSection = () => {
       answer: "Yes! We provide state-specific guides for all 50 states covering licensing requirements, insurance minimums, tax obligations, and bonding requirements. The core business strategies apply nationwide."
     },
     {
-      question: "Can I access the content on my phone?",
-      answer: "Absolutely. All content is mobile-optimized. You can read lessons on your phone, tablet, or computer. Many contractors complete lessons on job sites during breaks."
-    },
-    {
       question: "What trades is this for?",
       answer: "The course is designed for all construction trades including electrical, plumbing, HVAC, roofing, general construction, painting, flooring, and more. Week 10 includes trade-specific modules."
-    },
-    {
-      question: "Do I get support if I have questions?",
-      answer: "Yes! Starter plans get email support. Professional plans get community access and monthly group calls. Enterprise plans get 1-on-1 monthly coaching sessions."
     },
     {
       question: "What if I don't see results?",
       answer: "We offer a 30-day money-back guarantee. If you don't see measurable improvements in your business within 30 days, we'll refund your payment in full. You keep all downloaded materials."
     },
     {
-      question: "Can my team access the training?",
-      answer: "Professional and Enterprise plans include team access options. Enterprise plans include unlimited team members. This is perfect for training your office manager or key employees."
-    },
-    {
       question: "How quickly will I see ROI?",
       answer: "Most contractors save more than the course cost in the first month through entity structure optimization alone. The average student sees 5-10x ROI within 90 days."
-    },
-    {
-      question: "Is this just theory or practical advice?",
-      answer: "100% practical. Every lesson includes actionable steps you can implement immediately. Plus, you get 50+ templates, contracts, and tools you can use right away."
     }
   ]
 
   return (
-    <section id="faq" className="py-20 px-4 bg-white">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-navy mb-4">Frequently Asked Questions</h2>
-          <p className="text-xl text-gray-600">Got questions? We've got answers.</p>
-        </div>
+    <section className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
+      <div className="max-w-4xl mx-auto px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge className="mb-4 bg-orange-100 text-orange-800 border-orange-200">
+            <BookOpen className="w-4 h-4 mr-2" />
+            FAQ
+          </Badge>
+          <h2 className="text-4xl font-bold text-amber-900 mb-6">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-xl text-amber-700">
+            Everything you need to know about our contractor education platform.
+          </p>
+        </motion.div>
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="bg-gray-50 rounded-lg overflow-hidden"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-xl border border-amber-200 overflow-hidden"
             >
               <button
+                className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-amber-50 transition-colors"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 transition"
               >
-                <span className="font-semibold text-navy">{faq.question}</span>
-                {openIndex === index ? (
-                  <ChevronUp className="w-5 h-5 text-gray-500" />
-                ) : (
-                  <ChevronDown className="w-5 h-5 text-gray-500" />
-                )}
+                <span className="font-semibold text-amber-900">{faq.question}</span>
+                <ChevronDown
+                  className={cn(
+                    "w-5 h-5 text-amber-600 transition-transform",
+                    openIndex === index ? "rotate-180" : ""
+                  )}
+                />
               </button>
-              
               {openIndex === index && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
-                  transition={{ duration: 0.3 }}
+                  exit={{ height: 0, opacity: 0 }}
                   className="px-6 pb-4"
                 >
-                  <p className="text-gray-700">{faq.answer}</p>
+                  <p className="text-amber-700">{faq.answer}</p>
                 </motion.div>
               )}
             </motion.div>
           ))}
         </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 mb-4">Still have questions?</p>
-          <Button variant="outline" className="border-navy text-navy hover:bg-navy hover:text-white">
-            Contact Support
-          </Button>
-        </div>
       </div>
     </section>
   )
 }
 
-// ROI Calculator Section
-const ROICalculatorSection = () => {
-  const [revenue, setRevenue] = useState(250000)
-  const [employees, setEmployees] = useState(2)
-  
-  const calculateSavings = () => {
-    const entitySavings = revenue * 0.03 // 3% savings from proper entity structure
-    const taxStrategySavings = revenue * 0.02 // 2% from tax strategies
-    const efficiencySavings = revenue * 0.05 // 5% from operational efficiency
-    const pricingIncrease = revenue * 0.18 // 18% pricing increase potential
-    
-    return {
-      entity: Math.round(entitySavings),
-      tax: Math.round(taxStrategySavings),
-      efficiency: Math.round(efficiencySavings),
-      pricing: Math.round(pricingIncrease),
-      total: Math.round(entitySavings + taxStrategySavings + efficiencySavings + pricingIncrease)
-    }
+// Proof Section (Stats)
+const ProofSection = () => {
+  const statsRef = useRef<HTMLDivElement>(null)
+  const isInView = useInView(statsRef, { once: true })
+
+  const stats = [
+    { icon: <Users className="w-8 h-8" />, value: 500, label: "Contractors Enrolled", suffix: "+" },
+    { icon: <DollarSign className="w-8 h-8" />, value: 3.5, label: "Million Saved in Taxes", suffix: "M" },
+    { icon: <TrendingUp className="w-8 h-8" />, value: 18, label: "Higher Rates Charged", suffix: "%" },
+    { icon: <Shield className="w-8 h-8" />, value: 847, label: "K Average Assets Protected", suffix: "K" },
+  ]
+
+  const StatCounter = ({ icon, value, label, suffix, delay }: {
+    icon: React.ReactNode
+    value: number
+    label: string
+    suffix: string
+    delay: number
+  }) => {
+    const springValue = useSpring(0, { stiffness: 50, damping: 10 })
+    const displayValue = useTransform(springValue, (latest) => Math.floor(latest))
+
+    useEffect(() => {
+      if (isInView) {
+        springValue.set(value)
+      }
+    }, [isInView, value, springValue])
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay }}
+        className="text-center"
+      >
+        <div className="text-orange-600 mb-4 flex justify-center">
+          {icon}
+        </div>
+        <div className="text-4xl font-bold text-amber-900 mb-2">
+          <motion.span>{displayValue}</motion.span>
+          <span>{suffix}</span>
+        </div>
+        <p className="text-amber-700">{label}</p>
+      </motion.div>
+    )
   }
 
-  const savings = calculateSavings()
-
   return (
-    <section className="py-20 px-4 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-navy mb-4">Calculate Your ROI</h2>
-          <p className="text-xl text-gray-600">See how much you could save and earn</p>
-        </div>
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200">
+            <Shield className="w-4 h-4 mr-2" />
+            Proven Results
+          </Badge>
+          <h2 className="text-4xl font-bold text-amber-900 mb-6">
+            The Numbers Speak for Themselves
+          </h2>
+          <p className="text-xl text-amber-700 max-w-3xl mx-auto">
+            Join thousands of contractors who have transformed their businesses with our education platform.
+          </p>
+        </motion.div>
 
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Annual Revenue
-              </label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
-                <input
-                  type="number"
-                  value={revenue}
-                  onChange={(e) => setRevenue(Number(e.target.value))}
-                  className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy focus:border-transparent"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Number of Employees
-              </label>
-              <input
-                type="number"
-                value={employees}
-                onChange={(e) => setEmployees(Number(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-navy focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold text-navy mb-4">Potential Annual Savings & Earnings</h3>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Entity Structure Optimization</span>
-                <span className="font-semibold text-green-600">+${savings.entity.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Tax Strategy Savings</span>
-                <span className="font-semibold text-green-600">+${savings.tax.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Operational Efficiency</span>
-                <span className="font-semibold text-green-600">+${savings.efficiency.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-600">Premium Pricing Potential</span>
-                <span className="font-semibold text-green-600">+${savings.pricing.toLocaleString()}</span>
-              </div>
-              
-              <div className="border-t pt-3 mt-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-xl font-bold text-navy">Total Annual Impact</span>
-                  <span className="text-2xl font-bold text-green-600">${savings.total.toLocaleString()}</span>
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  ROI in first year: {Math.round(savings.total / (197 * 12) * 100)}%
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 bg-green-50 rounded-lg p-4 text-center">
-            <p className="text-green-900 font-semibold">
-              The course pays for itself in {Math.round((197 * 12) / (savings.total / 365))} days
-            </p>
-          </div>
+        <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <StatCounter
+              key={index}
+              icon={stat.icon}
+              value={stat.value}
+              label={stat.label}
+              suffix={stat.suffix}
+              delay={index * 0.1}
+            />
+          ))}
         </div>
       </div>
     </section>
   )
 }
 
-// Footer Section
-const FooterSection = () => {
+// Contact Section
+const ContactSection = () => {
   return (
-    <footer className="bg-navy text-white">
-      {/* CTA Section */}
-      <div className="bg-gradient-to-r from-navy-dark to-navy py-12 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Build Your Empire?</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join 500+ contractors who are building wealth, not just businesses
-          </p>
-          
-          <div className="max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="flex-1 bg-white text-gray-900"
-              />
-              <Button className="bg-safety hover:bg-safety-dark text-white">
-                Get Free LLC Guide
-              </Button>
+    <section className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="space-y-8"
+          >
+            <div>
+              <Badge className="mb-4 bg-orange-100 text-orange-800 border-orange-200">
+                <Headphones className="w-4 h-4 mr-2" />
+                Get in Touch
+              </Badge>
+              <h2 className="text-4xl font-bold text-amber-900 mb-6">
+                Ready to Transform Your Business?
+              </h2>
+              <p className="text-xl text-amber-700 mb-8">
+                Have questions about our platform? Want to discuss your specific business challenges? 
+                Our team of contractor business experts is here to help.
+              </p>
             </div>
-            <p className="text-sm mt-3 opacity-75">
-              Free guide: "7 Expensive Mistakes Contractors Make with LLCs"
-            </p>
-          </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <Phone className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-amber-900">Phone</h3>
+                  <p className="text-amber-700">(555) 123-4567</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <Mail className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-amber-900">Email</h3>
+                  <p className="text-amber-700">support@bluecollarbusinessschool.com</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-amber-900">Office</h3>
+                  <p className="text-amber-700">123 Business Ave, Suite 100<br />Austin, TX 78701</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="bg-white p-8 rounded-2xl shadow-lg border border-amber-200"
+          >
+            <form className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="firstName" className="text-amber-900">First Name</Label>
+                  <Input 
+                    id="firstName" 
+                    placeholder="John" 
+                    className="border-amber-200 focus:border-orange-500"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName" className="text-amber-900">Last Name</Label>
+                  <Input 
+                    id="lastName" 
+                    placeholder="Smith" 
+                    className="border-amber-200 focus:border-orange-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="email" className="text-amber-900">Email</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  placeholder="john@example.com" 
+                  className="border-amber-200 focus:border-orange-500"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="company" className="text-amber-900">Company</Label>
+                <Input 
+                  id="company" 
+                  placeholder="Your Construction Company" 
+                  className="border-amber-200 focus:border-orange-500"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="message" className="text-amber-900">Message</Label>
+                <Textarea 
+                  id="message" 
+                  placeholder="Tell us about your business goals and challenges..."
+                  className="border-amber-200 focus:border-orange-500 min-h-[120px]"
+                />
+              </div>
+
+              <Button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3">
+                Send Message
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </form>
+          </motion.div>
         </div>
       </div>
+    </section>
+  )
+}
 
-      {/* Links Section */}
-      <div className="py-12 px-4">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-xl font-bold mb-4">Blue Collar Business School</h3>
-            <p className="text-sm opacity-75">
-              Building contractors who build wealth. Transform your skills into a scalable business.
+// Footer
+const Footer = () => {
+  return (
+    <footer className="bg-amber-900 text-amber-100 py-16">
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Coffee className="w-8 h-8 text-orange-400" />
+              <span className="text-2xl font-bold text-white">Blue Collar Business School</span>
+            </div>
+            <p className="text-amber-200">
+              Empowering contractors with the business knowledge they need to build successful, scalable companies.
             </p>
           </div>
-          
+
           <div>
-            <h4 className="font-semibold mb-3">Resources</h4>
-            <ul className="space-y-2 text-sm opacity-75">
-              <li><a href="#" className="hover:opacity-100">Free Tools</a></li>
-              <li><a href="#" className="hover:opacity-100">State Guides</a></li>
-              <li><a href="#" className="hover:opacity-100">Industry Reports</a></li>
-              <li><a href="#" className="hover:opacity-100">Blog</a></li>
+            <h3 className="font-semibold text-white mb-4">Platform</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Courses</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Quizzes</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Certifications</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Community</a></li>
             </ul>
           </div>
-          
+
           <div>
-            <h4 className="font-semibold mb-3">Company</h4>
-            <ul className="space-y-2 text-sm opacity-75">
-              <li><a href="#" className="hover:opacity-100">About Us</a></li>
-              <li><a href="#" className="hover:opacity-100">Success Stories</a></li>
-              <li><a href="#" className="hover:opacity-100">Contact</a></li>
-              <li><a href="#" className="hover:opacity-100">Partners</a></li>
+            <h3 className="font-semibold text-white mb-4">Support</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Help Center</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Contact Us</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Live Chat</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Resources</a></li>
             </ul>
           </div>
-          
+
           <div>
-            <h4 className="font-semibold mb-3">Contact</h4>
-            <ul className="space-y-2 text-sm opacity-75">
-              <li className="flex items-center">
-                <Mail className="w-4 h-4 mr-2" />
-                support@bluecollarbusinessschool.com
-              </li>
-              <li className="flex items-center">
-                <Phone className="w-4 h-4 mr-2" />
-                1-800-BBS-GROW
-              </li>
-              <li className="flex items-center">
-                <Clock className="w-4 h-4 mr-2" />
-                Mon-Fri 8AM-6PM EST
-              </li>
+            <h3 className="font-semibold text-white mb-4">Company</h3>
+            <ul className="space-y-2">
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Careers</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="text-amber-200 hover:text-white transition-colors">Terms of Service</a></li>
             </ul>
           </div>
         </div>
-      </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-navy-light py-6 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm opacity-75">
-          <p>© 2024 Blue Collar Business School. All rights reserved.</p>
+        <div className="border-t border-amber-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-amber-200">
+            © 2024 Blue Collar Business School. All rights reserved.
+          </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="hover:opacity-100">Privacy Policy</a>
-            <a href="#" className="hover:opacity-100">Terms of Service</a>
-            <a href="#" className="hover:opacity-100">Refund Policy</a>
+            <a href="#" className="text-amber-200 hover:text-white transition-colors">
+              <span className="sr-only">Twitter</span>
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+              </svg>
+            </a>
+            <a href="#" className="text-amber-200 hover:text-white transition-colors">
+              <span className="sr-only">LinkedIn</span>
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
           </div>
         </div>
       </div>
@@ -871,19 +934,20 @@ const FooterSection = () => {
   )
 }
 
-// Main App Component
-export default function App() {
+// Main Component
+const ContractorEducationWebsite = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <Navigation />
+    <div className="min-h-screen">
       <HeroSection />
-      <ProblemSolutionSection />
-      <CourseOverviewSection />
-      <SuccessStoriesSection />
+      <FeaturesSection />
+      <TestimonialsSection />
       <PricingSection />
-      <ROICalculatorSection />
+      <ProofSection />
       <FAQSection />
-      <FooterSection />
+      <ContactSection />
+      <Footer />
     </div>
   )
 }
+
+export default ContractorEducationWebsite
