@@ -1,97 +1,95 @@
-# Contractor Education Website
+# Contractor Education Platform
 
-A modern React application with TypeScript and Tailwind CSS v4 for contractor business education.
+A modern React application for contractor business education with interactive quizzes and courses.
 
-## Features
-
-- Interactive quizzes and courses for contractors
-- Modern, responsive design with Tailwind CSS v4
-- Animated UI with Framer Motion
-- Component-based architecture
-- TypeScript for type safety
-
-## Tech Stack
-
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Tailwind CSS v4** - Styling
-- **Vite** - Build tool
-- **Framer Motion** - Animations
-- **Radix UI** - Headless UI components
-- **Lucide Icons** - Icon library
-
-## Getting Started
-
-### Install Dependencies
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### Development Server
-
-```bash
+# Run development server
 npm run dev
-```
 
-Open [http://localhost:5173](http://localhost:5173) to view the application.
-
-### Build for Production
-
-```bash
+# Build for production
 npm run build
 ```
 
-### Preview Production Build
+## 📁 Project Structure
+
+```
+bbs/
+├── src/
+│   ├── components/    # UI components
+│   ├── lib/          # Utilities
+│   └── App.tsx       # Main application
+├── public/           # Static assets
+└── index.html       # Entry point
+```
+
+## 🛠️ Tech Stack
+
+- **React 18** with TypeScript
+- **Tailwind CSS v4** for styling
+- **Vite** for fast builds
+- **Framer Motion** for animations
+- **Radix UI** for accessible components
+
+## 🚢 Deployment
+
+### Netlify (Recommended)
+1. Connect GitHub repository to Netlify
+2. Auto-deploys on push to main branch
+3. Configuration in `netlify.toml`
+
+### Manual Build
+```bash
+npm run build
+# Deploy the 'dist' folder to any static host
+```
+
+## 📝 Environment Variables
+
+Copy `.env.example` to `.env.local` for local development:
+```bash
+cp .env.example .env.local
+```
+
+Variables must be prefixed with `VITE_` to be accessible in the browser.
+
+## 🧪 Development
 
 ```bash
+# Type checking
+npm run type-check
+
+# Clean install
+npm run reinstall
+
+# Preview production build
 npm run preview
 ```
 
-## Project Structure
+## 📦 Available Scripts
 
-```
-contractor-education-site/
-├── src/
-│   ├── components/
-│   │   └── ui/           # Reusable UI components
-│   ├── lib/
-│   │   └── utils.ts      # Utility functions
-│   ├── App.tsx           # Main application component
-│   ├── main.tsx          # Application entry point
-│   └── index.css         # Tailwind CSS v4 styles
-├── public/               # Static assets
-├── index.html           # HTML template
-└── vite.config.ts       # Vite configuration
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run type-check` - Run TypeScript type checking
 
-## Components
+## 🤝 Contributing
 
-The application includes the following sections:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- **Hero Section** - Animated hero with dynamic image grid
-- **Features** - Business education features
-- **Testimonials** - Success stories from contractors
-- **Pricing** - Tiered pricing plans with animations
-- **Stats** - Animated statistics
-- **FAQ** - Frequently asked questions
-- **Contact** - Contact form and information
-- **Footer** - Site navigation and links
-
-## Customization
-
-### Colors
-
-The color scheme uses warm amber and orange tones. To customize, modify the CSS variables in `src/index.css`.
-
-### Content
-
-All content is contained within the `src/App.tsx` file. Update the text, images, and data directly in the component sections.
-
-### Components
-
-UI components are located in `src/components/ui/`. These are reusable and follow shadcn/ui patterns.
-
-## License
+## 📄 License
 
 MIT
+
+## 🔗 Links
+
+- [Live Site](https://your-site.netlify.app)
+- [GitHub Repository](https://github.com/MCERQUA/bbs)

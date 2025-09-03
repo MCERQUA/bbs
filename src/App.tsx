@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
-import { motion, useScroll, useTransform, useInView, useSpring } from "framer-motion"
+import { motion, useTransform, useInView, useSpring } from "framer-motion"
 import { 
   BookOpen, 
   Users, 
@@ -15,8 +15,6 @@ import {
   Target, 
   Zap,
   ChevronDown,
-  Menu,
-  X,
   Mail,
   Phone,
   MapPin,
@@ -32,7 +30,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
 // Utility function
@@ -517,15 +514,13 @@ const PricingSection = () => {
                 
                 <div className="mb-6">
                   <span className="text-5xl font-bold text-amber-900">
+                    $
                     <NumberFlow
                       value={isMonthly ? Number(plan.price) : Number(plan.yearlyPrice)}
                       format={{
-                        style: "currency",
-                        currency: "USD",
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 0,
                       }}
-                      formatter={(value) => `${value}`}
                       transformTiming={{
                         duration: 500,
                         easing: "ease-out",
