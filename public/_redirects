@@ -1,0 +1,5 @@
+# Netlify redirects file (in public folder for Vite)
+# This handles client-side routing for React SPA
+
+# Redirect all routes to index.html for React Router
+/*    /index.html   200
