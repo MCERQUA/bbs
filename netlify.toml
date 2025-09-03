@@ -9,11 +9,10 @@
   
   # Directory that contains the deploy-ready files
   publish = "dist"
-  
-  # Node version for builds
-  environment = { NODE_VERSION = "20" }
 
 [build.environment]
+  # Node version for builds
+  NODE_VERSION = "20"
   # Vite needs this for proper builds
   VITE_CJS_TRACE = "true"
 
@@ -31,20 +30,13 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# SPA redirect rules
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin", "user"]}
-
-# Handle client-side routing for React
+# Handle client-side routing for React SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Redirect www to non-www (if you have a custom domain)
+# Redirect www to non-www (optional - remove if not using custom domain)
 [[redirects]]
   from = "https://www.contractoredu.com/*"
   to = "https://contractoredu.com/:splat"
