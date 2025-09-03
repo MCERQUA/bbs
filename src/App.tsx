@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react"
+import BBSHeader from "@/components/BBSHeader"
 import { motion, useTransform, useInView, useSpring } from "framer-motion"
 import { 
   BookOpen, 
@@ -229,7 +230,7 @@ const FeaturesSection = () => {
   ]
 
   return (
-    <section className="py-20 bg-white">
+    <section id="curriculum" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -306,7 +307,7 @@ const TestimonialsSection = () => {
   ]
 
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
+    <section id="success-stories" className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -451,7 +452,7 @@ const PricingSection = () => {
   ]
 
   return (
-    <section className="py-20 bg-white">
+    <section id="pricing" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -592,7 +593,7 @@ const FAQSection = () => {
   ]
 
   return (
-    <section className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
+    <section id="faq" className="py-20 bg-gradient-to-br from-amber-50 to-orange-50">
       <div className="max-w-4xl mx-auto px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -741,7 +742,7 @@ const ProofSection = () => {
 // Contact Section
 const ContactSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
+    <section id="contact" className="py-20 bg-gradient-to-br from-orange-50 to-amber-50">
       <div className="max-w-7xl mx-auto px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <motion.div
@@ -937,6 +938,7 @@ const Footer = () => {
 const ContractorEducationWebsite = () => {
   return (
     <div className="min-h-screen">
+      <BBSHeader />
       <HeroSection />
       <FeaturesSection />
       <TestimonialsSection />
