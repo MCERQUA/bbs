@@ -871,7 +871,6 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Coffee className="w-8 h-8 text-orange-400" />
               <span className="text-2xl font-bold text-white">Blue Collar Business School</span>
             </div>
             <p className="text-amber-200">
