@@ -27,3 +27,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# BBS Email Course - kept locally but not deployed with website
+BBS-email/
