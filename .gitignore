@@ -30,3 +30,22 @@ dist-ssr
 
 # BBS Email Course - kept locally but not deployed with website
 BBS-email/
+
+# Claude AI configuration and sensitive files
+.claude/
+/.claude
+CLAUDE.md
+**/CLAUDE.md
+
+# API Keys and sensitive configuration
+*.key
+*.pem
+*api-key*
+*apikey*
+*API_KEY*
+*secret*
+*credentials*
+.env*
+config.local.json
+secrets.json
+mcp-servers.json

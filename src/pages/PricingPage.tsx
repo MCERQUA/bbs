@@ -1,6 +1,5 @@
-import { useState } from "react"
 import { motion } from "framer-motion"
-import { CheckCircle, Shield, DollarSign, ArrowRight, Sparkles } from "lucide-react"
+import { CheckCircle, Shield, ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
@@ -61,7 +60,6 @@ const plans = [
 ]
 
 export default function PricingPage() {
-  const [isAnnual, setIsAnnual] = useState(false)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
@@ -117,7 +115,7 @@ export default function PricingPage() {
                   <div className="mb-6 relative">
                     <div className="flex items-center justify-center">
                       <span className="text-3xl font-bold text-gray-400 line-through mr-3">
-                        ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                        ${plan.monthlyPrice}
                       </span>
                       <div className="relative">
                         <span className="text-5xl font-bold text-green-600">FREE</span>
@@ -129,7 +127,7 @@ export default function PricingPage() {
                       </div>
                     </div>
                     <p className="text-sm text-amber-700 mt-2 text-center">
-                      Regular price: ${isAnnual ? plan.annualPrice : plan.monthlyPrice}/month
+                      Regular price: ${plan.monthlyPrice}/month
                     </p>
                   </div>
 

@@ -83,7 +83,6 @@ const AnimatedPhoto: React.FC<{ delay?: number }> = ({ delay = 0 }) => {
 }
 
 export default function HomePage() {
-  const [isYearly, setIsYearly] = useState(false)
   const [activeFeature, setActiveFeature] = useState(0)
   const [enrollmentCount] = useState(487)
   
