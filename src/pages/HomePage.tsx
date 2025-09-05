@@ -11,7 +11,8 @@ import {
   Mail,
   Phone,
   Shield,
-  Headphones
+  Headphones,
+  Sparkles
 } from "lucide-react"
 import confetti from "canvas-confetti"
 import NumberFlow from "@number-flow/react"
@@ -499,38 +500,23 @@ export default function HomePage() {
       <section id="pricing" className="py-24 bg-gradient-to-b from-amber-50 to-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200">
-              Investment Options
-            </Badge>
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block mb-4"
+            >
+              <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 px-6 py-2 text-lg">
+                <Sparkles className="w-5 h-5 mr-2" />
+                FREE ENROLLMENT - LIMITED TIME
+              </Badge>
+            </motion.div>
             <h2 className="text-4xl font-bold text-amber-900 mb-4">
               Choose Your Path to Success
             </h2>
             <p className="text-xl text-amber-700 max-w-3xl mx-auto mb-8">
-              Start with our 7-day free trial. Cancel anytime. 
-              Save 20% with annual billing.
+              All courses are currently FREE for a limited time. No credit card required.
             </p>
             
-            <div className="inline-flex items-center space-x-3 bg-white rounded-lg p-1 shadow-md">
-              <button
-                onClick={() => setIsYearly(false)}
-                className={cn(
-                  "px-4 py-2 rounded-md transition",
-                  !isYearly ? "bg-amber-900 text-white" : "text-amber-700"
-                )}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setIsYearly(true)}
-                className={cn(
-                  "px-4 py-2 rounded-md transition",
-                  isYearly ? "bg-amber-900 text-white" : "text-amber-700"
-                )}
-              >
-                Annual
-                <Badge className="ml-2 bg-green-100 text-green-800">Save 20%</Badge>
-              </button>
-            </div>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -554,16 +540,23 @@ export default function HomePage() {
                 <h3 className="text-2xl font-bold text-amber-900 mb-2">{plan.name}</h3>
                 <p className="text-amber-700 mb-6">{plan.description}</p>
                 
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-amber-900">
-                    {isYearly ? plan.yearlyPrice : plan.price}
-                  </span>
-                  <span className="text-amber-700">/{plan.period}</span>
-                  {isYearly && (
-                    <p className="text-sm text-green-600 mt-1">
-                      Save ${(parseInt(plan.price.slice(1)) - parseInt(plan.yearlyPrice.slice(1))) * 12}/year
-                    </p>
-                  )}
+                <div className="mb-6 relative">
+                  <div className="flex items-center justify-center">
+                    <span className="text-3xl font-bold text-gray-400 line-through mr-3">
+                      {plan.price}
+                    </span>
+                    <div className="relative">
+                      <span className="text-5xl font-bold text-green-600">FREE</span>
+                      <div className="absolute -top-2 -right-8 transform rotate-12">
+                        <Badge className="bg-red-500 text-white border-0 text-xs px-2 py-1">
+                          Limited
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-amber-700 mt-2 text-center">
+                    Regular price: {plan.price}/month
+                  </p>
                 </div>
                 
                 <ul className="space-y-3 mb-8">
@@ -575,15 +568,15 @@ export default function HomePage() {
                   ))}
                 </ul>
                 
-                <Link to={plan.href}>
+                <Link to="/signup">
                   <Button className={cn(
-                    "w-full",
+                    "w-full shadow-lg",
                     plan.isPopular 
-                      ? "bg-orange-600 hover:bg-orange-700" 
-                      : "bg-amber-900 hover:bg-amber-800",
+                      ? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700" 
+                      : "bg-green-600 hover:bg-green-700",
                     "text-white"
                   )}>
-                    {plan.buttonText}
+                    Get Started FREE
                   </Button>
                 </Link>
               </motion.div>

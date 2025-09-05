@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { CheckCircle, Shield, DollarSign, ArrowRight } from "lucide-react"
+import { CheckCircle, Shield, DollarSign, ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
@@ -73,33 +73,23 @@ export default function PricingPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4 bg-amber-100 text-amber-800 border-amber-200">
-              <DollarSign className="w-4 h-4 mr-2" />
-              Simple, Transparent Pricing
-            </Badge>
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block mb-4"
+            >
+              <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 px-6 py-2 text-lg">
+                <Sparkles className="w-5 h-5 mr-2" />
+                FREE ENROLLMENT - LIMITED TIME
+              </Badge>
+            </motion.div>
             <h1 className="text-4xl md:text-5xl font-bold text-amber-900 mb-6">
               Investment in Your Business Future
             </h1>
             <p className="text-xl text-amber-700 max-w-3xl mx-auto mb-8">
-              Choose the plan that fits your business goals. All plans include our 30-day money-back guarantee.
+              All courses are currently FREE for a limited time. No credit card required.
             </p>
 
-            {/* Billing Toggle */}
-            <div className="inline-flex items-center space-x-3 bg-white rounded-lg p-1 shadow-md">
-              <button
-                onClick={() => setIsAnnual(false)}
-                className={`px-4 py-2 rounded-md transition ${!isAnnual ? 'bg-amber-900 text-white' : 'text-amber-700'}`}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setIsAnnual(true)}
-                className={`px-4 py-2 rounded-md transition ${isAnnual ? 'bg-amber-900 text-white' : 'text-amber-700'}`}
-              >
-                Annual
-                <Badge className="ml-2 bg-green-100 text-green-800">Save 20%</Badge>
-              </button>
-            </div>
           </motion.div>
 
           {/* Pricing Cards */}
@@ -124,16 +114,23 @@ export default function PricingPage() {
                   <h3 className="text-2xl font-bold text-amber-900 mb-2">{plan.name}</h3>
                   <p className="text-amber-700 mb-4">{plan.description}</p>
                   
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-amber-900">
-                      ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
-                    </span>
-                    <span className="text-amber-700">/month</span>
-                    {isAnnual && (
-                      <p className="text-sm text-green-600 mt-1">
-                        Save ${(plan.monthlyPrice - plan.annualPrice) * 12}/year
-                      </p>
-                    )}
+                  <div className="mb-6 relative">
+                    <div className="flex items-center justify-center">
+                      <span className="text-3xl font-bold text-gray-400 line-through mr-3">
+                        ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                      </span>
+                      <div className="relative">
+                        <span className="text-5xl font-bold text-green-600">FREE</span>
+                        <div className="absolute -top-2 -right-8 transform rotate-12">
+                          <Badge className="bg-red-500 text-white border-0 text-xs px-2 py-1">
+                            Limited Time
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-amber-700 mt-2 text-center">
+                      Regular price: ${isAnnual ? plan.annualPrice : plan.monthlyPrice}/month
+                    </p>
                   </div>
 
                   <ul className="space-y-3 mb-6">
@@ -145,13 +142,13 @@ export default function PricingPage() {
                     ))}
                   </ul>
 
-                  <Link to="/enroll">
+                  <Link to="/signup">
                     <Button className={`w-full ${
                       plan.isPopular 
-                        ? 'bg-orange-600 hover:bg-orange-700' 
-                        : 'bg-amber-900 hover:bg-amber-800'
-                    } text-white`}>
-                      {plan.cta}
+                        ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700' 
+                        : 'bg-green-600 hover:bg-green-700'
+                    } text-white shadow-lg`}>
+                      Get Started FREE
                     </Button>
                   </Link>
                 </div>

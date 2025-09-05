@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
-import { CheckCircle, Clock, Shield, ArrowRight } from "lucide-react"
+import { CheckCircle, Clock, Shield, ArrowRight, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Link } from "react-router-dom"
@@ -24,15 +24,21 @@ export default function EnrollPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4 bg-green-100 text-green-800 border-green-200">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Start Your 7-Day Free Trial
-            </Badge>
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="inline-block mb-4"
+            >
+              <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white border-0 px-6 py-2 text-lg">
+                <Sparkles className="w-5 h-5 mr-2" />
+                FREE ENROLLMENT - LIMITED TIME
+              </Badge>
+            </motion.div>
             <h1 className="text-4xl md:text-5xl font-bold text-amber-900 mb-6">
               You're One Step Away from Transformation
             </h1>
             <p className="text-xl text-amber-700">
-              Join 500+ contractors who have already transformed their businesses
+              Join 500+ contractors who have already transformed their businesses - Now FREE!
             </p>
           </motion.div>
 
@@ -50,7 +56,7 @@ export default function EnrollPage() {
                   key={key}
                   className={`block p-4 rounded-lg border-2 cursor-pointer transition ${
                     selectedPlan === key
-                      ? "border-orange-500 bg-orange-50"
+                      ? "border-green-500 bg-green-50"
                       : "border-amber-200 hover:border-amber-300"
                   }`}
                 >
@@ -69,7 +75,13 @@ export default function EnrollPage() {
                         <Badge className="mt-1 bg-orange-100 text-orange-800">Most Popular</Badge>
                       )}
                     </div>
-                    <p className="text-2xl font-bold text-amber-900">${plan.price}/mo</p>
+                    <div className="text-right">
+                      <p className="text-lg text-gray-400 line-through">${plan.price}/mo</p>
+                      <div className="flex items-center">
+                        <p className="text-2xl font-bold text-green-600">FREE</p>
+                        <Badge className="ml-2 bg-red-500 text-white text-xs">Limited</Badge>
+                      </div>
+                    </div>
                   </div>
                 </label>
               ))}
@@ -144,14 +156,14 @@ export default function EnrollPage() {
             className="text-center"
           >
             <Link to="/signup">
-              <Button size="lg" className="bg-orange-600 hover:bg-orange-700 text-white text-lg px-8 py-6">
-                Start Your Free Trial Now
+              <Button size="lg" className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-lg px-8 py-6 shadow-lg">
+                Get Started FREE Now
                 <ArrowRight className="ml-2" />
               </Button>
             </Link>
             <p className="mt-4 text-sm text-amber-600">
               <Clock className="inline w-4 h-4 mr-1" />
-              Takes less than 2 minutes • Cancel anytime
+              Takes less than 2 minutes • No credit card required
             </p>
           </motion.div>
 
