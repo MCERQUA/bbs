@@ -60,9 +60,11 @@ const plans = [
 ]
 
 export default function PricingPage() {
+  const showPricing = false // Set to true when ready to show pricing
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+      {showPricing ? (
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -198,6 +200,19 @@ export default function PricingPage() {
           </div>
         </div>
       </section>
+      ) : (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-amber-900 mb-4">Pricing Coming Soon</h1>
+          <p className="text-xl text-amber-700 mb-8">We're currently offering FREE enrollment for a limited time!</p>
+          <Link to="/signup">
+            <Button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3">
+              Get Started FREE
+            </Button>
+          </Link>
+        </div>
+      </div>
+      )}
     </div>
   )
 }

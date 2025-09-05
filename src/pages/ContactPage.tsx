@@ -198,14 +198,14 @@ export default function ContactPage() {
                     <Phone className="w-6 h-6 text-orange-600 mr-3" />
                     <div>
                       <p className="font-semibold text-amber-900">Phone</p>
-                      <p className="text-amber-700">1-800-BBS-GROW</p>
+                      <p className="text-amber-700">844-967-5247</p>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <MapPin className="w-6 h-6 text-orange-600 mr-3" />
                     <div>
                       <p className="font-semibold text-amber-900">Headquarters</p>
-                      <p className="text-amber-700">Austin, Texas</p>
+                      <p className="text-amber-700">12220 E Riggs Rd, Chandler, AZ 85249</p>
                     </div>
                   </div>
                 </div>
@@ -214,9 +214,9 @@ export default function ContactPage() {
               <div className="bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl p-8">
                 <h3 className="text-xl font-bold text-amber-900 mb-4">Office Hours</h3>
                 <div className="space-y-2 text-amber-700">
-                  <p><span className="font-semibold">Monday - Friday:</span> 8:00 AM - 6:00 PM CST</p>
-                  <p><span className="font-semibold">Saturday:</span> 9:00 AM - 2:00 PM CST</p>
-                  <p><span className="font-semibold">Sunday:</span> Closed</p>
+                  <p><span className="font-semibold">Available 24/7</span></p>
+                  <p className="text-sm mt-2">Secondary Line: 855-336-7189</p>
+                  <p className="text-sm">Speak directly with our founder Josh - Available 24/7</p>
                 </div>
               </div>
 

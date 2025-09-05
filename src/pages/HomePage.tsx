@@ -11,8 +11,7 @@ import {
   Mail,
   Phone,
   Shield,
-  Headphones,
-  Sparkles
+  Headphones
 } from "lucide-react"
 import confetti from "canvas-confetti"
 import NumberFlow from "@number-flow/react"
@@ -26,7 +25,7 @@ function cn(...classes: (string | undefined | null | false)[]): string {
 }
 
 // Types
-interface PricingPlan {
+/* interface PricingPlan {
   name: string
   price: string
   yearlyPrice: string
@@ -36,7 +35,7 @@ interface PricingPlan {
   buttonText: string
   href: string
   isPopular: boolean
-}
+} */
 
 interface Testimonial {
   quote: string
@@ -95,7 +94,8 @@ export default function HomePage() {
     { icon: <Zap className="w-6 h-6" />, title: "Systems & Automation", desc: "Free up 20+ hours per week" }
   ]
   
-  const pricingPlans: PricingPlan[] = [
+  // Pricing plans - temporarily disabled
+  /* const pricingPlans: PricingPlan[] = [
     {
       name: "Starter",
       price: "$97",
@@ -155,6 +155,7 @@ export default function HomePage() {
       isPopular: false
     }
   ]
+  */
 
   const testimonials: Testimonial[] = [
     {
@@ -495,8 +496,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-24 bg-gradient-to-b from-amber-50 to-white">
+      {/* Pricing Section - Temporarily Hidden */}
+      {/* <section id="pricing" className="py-24 bg-gradient-to-b from-amber-50 to-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <motion.div
@@ -592,7 +593,7 @@ export default function HomePage() {
             </p>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
       <section id="faq" className="py-24 bg-white">

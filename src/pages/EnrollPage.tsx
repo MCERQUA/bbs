@@ -7,6 +7,7 @@ import { Link } from "react-router-dom"
 
 export default function EnrollPage() {
   const [selectedPlan, setSelectedPlan] = useState("professional")
+  const showPricing = false // Set to true when ready to show pricing
 
   const plans = {
     starter: { name: "Starter", price: 97 },
@@ -43,6 +44,7 @@ export default function EnrollPage() {
           </motion.div>
 
           {/* Plan Selection */}
+          {showPricing && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -87,6 +89,7 @@ export default function EnrollPage() {
               ))}
             </div>
           </motion.div>
+          )}
 
           {/* What's Included */}
           <motion.div
