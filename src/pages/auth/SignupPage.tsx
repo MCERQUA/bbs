@@ -17,6 +17,9 @@ export default function SignupPage() {
     password: "",
     confirmPassword: ""
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState("")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -25,10 +28,56 @@ export default function SignupPage() {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle signup logic
-    console.log("Signup:", formData)
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+    setErrorMessage("")
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage("Passwords do not match")
+      setSubmitStatus('error')
+      setIsSubmitting(false)
+      return
+    }
+
+    // Don't send passwords to Netlify Forms for security
+    const { password, confirmPassword, ...dataToSend } = formData
+
+    const formBody = new URLSearchParams({
+      'form-name': 'signup',
+      ...dataToSend
+    }).toString()
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formBody
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          company: "",
+          password: "",
+          confirmPassword: ""
+        })
+      } else {
+        setSubmitStatus('error')
+        setErrorMessage("There was an error with your submission. Please try again.")
+      }
+    } catch (error) {
+      setSubmitStatus('error')
+      setErrorMessage("Network error. Please check your connection and try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const benefits = [
@@ -93,6 +142,19 @@ export default function SignupPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              <input type="hidden" name="form-name" value="signup" />
+              {submitStatus === 'success' && (
+                <div className="p-4 bg-green-100 border border-green-300 rounded-md text-green-800">
+                  Welcome to Blue Collar Business School! Check your email for next steps.
+                </div>
+              )}
+
+              {submitStatus === 'error' && (
+                <div className="p-4 bg-red-100 border border-red-300 rounded-md text-red-800">
+                  {errorMessage}
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="firstName" className="text-amber-900">First Name</Label>
@@ -197,8 +259,12 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white">
-                Start Free Trial
+              <Button 
+                type="submit" 
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-50"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Creating Account...' : 'Start Free Trial'}
               </Button>
 
               <p className="text-center text-sm text-amber-700">

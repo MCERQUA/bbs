@@ -8,6 +8,25 @@
     <meta name="description" content="The 12-Week Email Course That Transforms Contractors Into CEOs. Save $7,065+ annually in taxes, protect your assets, charge 18% higher rates, and build a sellable business." />
   </head>
   <body>
+    <!-- Hidden forms for Netlify Forms detection -->
+    <!-- Contact Form -->
+    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="name" />
+      <input type="text" name="company" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <textarea name="message"></textarea>
+    </form>
+
+    <!-- Signup Form -->
+    <form name="signup" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="firstName" />
+      <input type="text" name="lastName" />
+      <input type="email" name="email" />
+      <input type="tel" name="phone" />
+      <input type="text" name="company" />
+    </form>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

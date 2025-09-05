@@ -14,6 +14,8 @@ export default function ContactPage() {
     company: "",
     message: ""
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -22,9 +24,40 @@ export default function ContactPage() {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Contact form:", formData)
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    const formBody = new URLSearchParams({
+      'form-name': 'contact',
+      ...formData
+    }).toString()
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: formBody
+      })
+
+      if (response.ok) {
+        setSubmitStatus('success')
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          message: ""
+        })
+      } else {
+        setSubmitStatus('error')
+      }
+    } catch (error) {
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -58,6 +91,7 @@ export default function ContactPage() {
             >
               <h2 className="text-2xl font-bold text-amber-900 mb-6">Send Us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
+                <input type="hidden" name="form-name" value="contact" />
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name" className="text-amber-900">Name</Label>
@@ -121,10 +155,26 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700 text-white">
+                <Button 
+                  type="submit" 
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white disabled:opacity-50"
+                  disabled={isSubmitting}
+                >
                   <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
+
+                {submitStatus === 'success' && (
+                  <div className="p-4 bg-green-100 border border-green-300 rounded-md text-green-800">
+                    Thank you for your message! We'll get back to you within 24 hours.
+                  </div>
+                )}
+
+                {submitStatus === 'error' && (
+                  <div className="p-4 bg-red-100 border border-red-300 rounded-md text-red-800">
+                    There was an error submitting your form. Please try again or contact us directly.
+                  </div>
+                )}
               </form>
             </motion.div>
 
