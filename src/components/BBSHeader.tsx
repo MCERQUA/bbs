@@ -1,10 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
@@ -37,22 +37,22 @@ const navigationItems: NavigationItem[] = [
     items: [
       {
         title: "Foundation (Weeks 1-4)",
-        href: "#phase-1",
+        href: "/courses#phase-1",
         description: "Business structure, contracts, financial management"
       },
       {
         title: "Growth (Weeks 5-8)", 
-        href: "#phase-2",
+        href: "/courses#phase-2",
         description: "Marketing, sales, team building strategies"
       },
       {
         title: "Scaling (Weeks 9-12)",
-        href: "#phase-3", 
+        href: "/courses#phase-3", 
         description: "Advanced strategies and exit planning"
       },
       {
         title: "Resources & Templates",
-        href: "#resources",
+        href: "/resources",
         description: "50+ contracts, SOPs, and financial tools"
       }
     ]
@@ -63,32 +63,32 @@ const navigationItems: NavigationItem[] = [
     items: [
       {
         title: "Starter - $97/month",
-        href: "#pricing",
+        href: "/pricing",
         description: "Full email course & basic templates"
       },
       {
         title: "Professional - $197/month",
-        href: "#pricing",
+        href: "/pricing",
         description: "All templates & community access"
       },
       {
         title: "Enterprise - $497/month",
-        href: "#pricing",
+        href: "/pricing",
         description: "1-on-1 coaching & custom SOPs"
       }
     ]
   },
   {
     title: "Success Stories",
-    href: "#success-stories"
+    href: "/#success-stories"
   },
   {
     title: "FAQ",
-    href: "#faq"
+    href: "/#faq"
   },
   {
     title: "Contact",
-    href: "#contact"
+    href: "/contact"
   }
 ];
 
@@ -100,7 +100,7 @@ function BBSHeader() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3">
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-lg shadow-md">
               <GraduationCap className="h-6 w-6 text-white" />
             </div>
@@ -108,7 +108,7 @@ function BBSHeader() {
               <span className="text-xl font-bold text-amber-900">BBS</span>
               <span className="text-xs text-amber-700 hidden sm:block">Blue Collar Business School</span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
@@ -133,9 +133,9 @@ function BBSHeader() {
                             </div>
                             <div className="grid gap-2">
                               {item.items.map((subItem) => (
-                                <NavigationMenuLink
+                                <Link
                                   key={subItem.title}
-                                  href={subItem.href}
+                                  to={subItem.href}
                                   className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-amber-50 hover:text-amber-900 focus:bg-amber-50"
                                 >
                                   <div className="text-sm font-semibold leading-none text-amber-900">{subItem.title}</div>
@@ -144,15 +144,15 @@ function BBSHeader() {
                                       {subItem.description}
                                     </p>
                                   )}
-                                </NavigationMenuLink>
+                                </Link>
                               ))}
                             </div>
                           </div>
                         </NavigationMenuContent>
                       </>
                     ) : (
-                      <NavigationMenuLink
-                        href={item.href}
+                      <Link
+                        to={item.href || "#"}
                         className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-100 hover:text-amber-900 focus:bg-amber-100 focus:text-amber-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                       >
                         <div className="flex items-center space-x-1">
@@ -161,7 +161,7 @@ function BBSHeader() {
                           {item.title === "Contact" && <Phone className="h-4 w-4" />}
                           <span>{item.title}</span>
                         </div>
-                      </NavigationMenuLink>
+                      </Link>
                     )}
                   </NavigationMenuItem>
                 ))}
@@ -171,19 +171,23 @@ function BBSHeader() {
 
           {/* Desktop CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-3">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              className="text-amber-900 hover:bg-amber-100"
-            >
-              Get Free LLC Guide
-            </Button>
-            <Button 
-              size="sm" 
-              className="bg-orange-600 hover:bg-orange-700 text-white border-orange-600"
-            >
-              Start Free Trial
-            </Button>
+            <Link to="/login">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="text-amber-900 hover:bg-amber-100"
+              >
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button 
+                size="sm" 
+                className="bg-orange-600 hover:bg-orange-700 text-white border-orange-600"
+              >
+                Start Free Trial
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -214,20 +218,20 @@ function BBSHeader() {
                       </div>
                       <div className="pl-6 space-y-1">
                         {item.items.map((subItem) => (
-                          <a
+                          <Link
                             key={subItem.title}
-                            href={subItem.href}
+                            to={subItem.href}
                             className="block px-3 py-2 text-sm text-amber-700 hover:text-amber-900 hover:bg-amber-50 rounded-md transition-colors"
                             onClick={() => setIsOpen(false)}
                           >
                             {subItem.title}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <a
-                      href={item.href}
+                    <Link
+                      to={item.href || "#"}
                       className="flex items-center px-3 py-2 text-sm font-semibold text-amber-900 hover:text-amber-900 hover:bg-amber-50 rounded-md transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
@@ -235,26 +239,32 @@ function BBSHeader() {
                       {item.title === "FAQ" && <Users className="h-4 w-4 mr-2" />}
                       {item.title === "Contact" && <Phone className="h-4 w-4 mr-2" />}
                       {item.title}
-                    </a>
+                    </Link>
                   )}
                 </div>
               ))}
               
               {/* Mobile CTA Buttons */}
               <div className="pt-4 space-y-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="w-full justify-start text-amber-900 hover:bg-amber-100"
-                >
-                  Get Free LLC Guide
-                </Button>
-                <Button 
-                  size="sm" 
-                  className="w-full bg-orange-600 hover:bg-orange-700 text-white"
-                >
-                  Start Free Trial
-                </Button>
+                <Link to="/login" className="block">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full justify-start text-amber-900 hover:bg-amber-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/signup" className="block">
+                  <Button 
+                    size="sm" 
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Start Free Trial
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "EMAIL-MCP": {
+      "command": "npx",
+      "args": ["-y", "@softeria/ms-365-mcp-server"],
+      "env": {
+        "MS_CLIENT_ID": "088920e-eb5a-450f-842b-95f61cba6556",
+        "MS_CLIENT_SECRET": "mp580~3L8aisFYeIPp5.IjIub_zpYMR5Lg3~-azu",
+        "MS_TENANT_ID": "b7bb1e45-2644-4876-a86b-e05cd79b9100"
+      }
+    }
+  }
+}
